@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Backpack Blitz | IEEE Day VIT Pune</title>
+<style>
+:root{--bg:#0a090f;--panel:#14110c;--line:#3a3220;--gold:#f5c451;--teal:#2dd4bf;--rd:#f43f5e;--tx:#f4ecd8;--mut:#a39878;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% -10%,#2a2110,var(--bg) 62%);color:var(--tx);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;overflow:hidden}
+button,input,select{font:inherit}
+button{touch-action:manipulation}
+input,select{background:#1a150c;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:16px;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.hidden{display:none!important}
+.app{display:grid;grid-template-columns:1fr 300px;gap:14px;height:100%;padding:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;position:relative}
+.main{display:flex;flex-direction:column;min-height:560px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line)}
+.timer{font:800 46px/1 Impact,"Arial Black",sans-serif;color:var(--gold);min-width:140px;letter-spacing:.03em}
+.timer.low{color:var(--rd);animation:p .45s infinite alternate}
+@keyframes p{to{opacity:.45}}
+.stats{display:flex;gap:22px}
+.stat{text-align:center;font-size:13px;color:var(--mut)}
+.stat b{display:block;font-size:24px;color:var(--tx)}
+.stat.bot b{color:var(--rd)}
+.brand{font:400 22px Impact,"Arial Black",sans-serif;color:var(--gold);text-align:right;line-height:1.1;letter-spacing:.04em}
+.brand small{display:block;font:400 12px "Trebuchet MS",sans-serif;color:var(--mut);letter-spacing:0}
+.zones{flex:1;min-height:0;display:grid;grid-template-columns:1.5fr 1fr;gap:12px;padding:12px;overflow:auto}
+.zone{border:2px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;transition:background .15s,border-color .15s;min-height:200px}
+.zone.over{border-color:var(--gold);background:#1c1609}
+.zone h4{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.zone h4 span{color:var(--mut);font-weight:400;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;align-content:start;flex:1}
+.grid .hint{grid-column:1/-1;color:var(--mut);font-size:13px;margin:0;text-align:center;padding:14px 0}
+.card{background:#1d1810;border:1px solid #4d4224;border-radius:12px;padding:10px 6px;color:var(--tx);cursor:grab;text-align:center;display:flex;flex-direction:column;gap:2px;font-size:13px;user-select:none;transition:filter .15s,opacity .15s}
+.card .e{font-size:34px;line-height:1.1}
+.card b{font-size:13px}
+.card:hover{border-color:var(--gold);background:#271f10}
+.card.in{filter:blur(3px) grayscale(.5);opacity:.38}
+.card.no{animation:sh .35s;border-color:var(--rd)}
+@keyframes sh{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.meter{height:12px;background:#251f10;border-radius:6px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.meter.full i{background:var(--teal)}
+.foot{padding:0 12px 12px;display:flex;justify-content:center}
+.btn{background:var(--gold);color:#241a02;border:0;border-radius:12px;padding:13px 34px;font-size:19px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.btn:hover{background:#ffd56a}
+.btn.sm{padding:8px 14px;font-size:15px}
+.btn.danger{background:var(--rd);color:#fff}
+.side{display:flex;flex-direction:column;gap:14px;min-height:0}
+.lb{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.lb h3{margin:0;font-size:17px}
+.tabs{display:flex;gap:6px}
+.tabs button{flex:1;background:#1d1810;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:7px 8px;cursor:pointer;font-size:14px}
+.tabs button.on{background:var(--gold);color:#241a02;border-color:var(--gold);font-weight:700}
+#lbf{width:100%;padding:7px 10px;font-size:14px}
+.lb ol{margin:0;padding:0;list-style:none;flex:1}
+.lb li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;font-size:14px}
+.lb li:nth-child(odd){background:#1a150c}
+.lb li.me{outline:2px solid var(--gold)}
+.lb li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb li em{font-style:normal;color:var(--mut);font-size:11px;margin-left:6px}
+.lb .empty{color:var(--mut);font-size:14px}
+.tiny{color:var(--mut);font-size:12px;text-decoration:underline;align-self:flex-start}
+.ov{position:absolute;inset:0;background:rgba(10,9,15,.95);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:auto;text-align:center;gap:12px;border-radius:16px;z-index:5;padding:20px}
+.ov>:first-child{margin-top:auto}.ov>:last-child{margin-bottom:auto}
+.ov h1{margin:0;font:400 52px Impact,"Arial Black",sans-serif;letter-spacing:.04em;color:var(--gold)}
+.ov p{margin:0;max-width:540px;color:var(--mut);line-height:1.45}
+.big{font:400 70px/1 Impact,"Arial Black",sans-serif;color:var(--gold)}
+.seg{display:flex;gap:6px}
+.seg button{background:#1d1810;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:8px 16px;cursor:pointer}
+.seg button.on{background:var(--gold);color:#241a02;border-color:var(--gold);font-weight:700}
+#name{width:min(100%,320px);font-size:18px;text-align:center}
+#dept{width:min(100%,380px)}
+#dept.err{border-color:var(--rd);box-shadow:0 0 0 2px rgba(244,63,94,.35)}
+.msg{color:var(--rd)!important;font-size:14px}
+.tl{color:var(--mut);font-size:15px;display:flex;align-items:center;gap:8px}
+.reveal{background:#1a150c;border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:var(--tx)!important}
+/* admin */
+.adm{height:100%;overflow:auto;padding:14px}
+.adm-in{max-width:1000px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.adm-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.adm-top h2{margin:0;font-size:20px}
+.gate{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools input{flex:1 1 160px}.tools select{flex:1 1 200px}
+.arow{display:grid;grid-template-columns:1.3fr 1fr 90px 64px auto;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
+.arow input,.arow select{width:100%}
+.am{color:var(--mut);font-size:13px;text-align:center}
+.aa{display:flex;gap:6px}
+@media(max-width:900px){
+ body{overflow:auto}
+ .app{grid-template-columns:1fr;height:auto;padding:8px;gap:10px}
+ .main{min-height:620px}
+ .zones{grid-template-columns:1fr;overflow:visible}
+ .top{position:sticky;top:0;z-index:3;background:var(--panel);border-radius:16px 16px 0 0}
+ .foot{position:sticky;bottom:0;z-index:3;padding-top:10px;background:linear-gradient(transparent,var(--panel) 40%)}
+ .lb{max-height:none}
+}
+@media(max-width:700px){
+ .arow{grid-template-columns:1fr 1fr}
+ .aa{grid-column:1/-1}.aa .btn{flex:1}
+}
+@media(max-width:600px){
+ .top{flex-wrap:wrap;padding:8px 10px;gap:6px}
+ .timer{font-size:34px;min-width:96px}
+ .stats{gap:12px}.stat{font-size:11px}.stat b{font-size:19px}
+ .brand{display:none}
+ .zones{padding:8px;gap:8px}
+ .zone{padding:8px;min-height:140px}
+ .grid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+ .card{padding:8px 4px;font-size:12px}.card .e{font-size:28px}
+ .ov h1{font-size:38px}.big{font-size:54px}
+ .ov .btn{width:100%}
+ .tl{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div class="app" id="app">
+ <div class="panel main">
+  <div class="top">
+   <div class="timer" id="timer">45.0</div>
+   <div class="stats">
+    <div class="stat">Your haul<b id="bagv">0</b></div>
+    <div class="stat">Weight<b id="wt">0/0</b></div>
+    <div class="stat bot">Greedy bot<b id="botv">0</b></div>
+   </div>
+   <div class="brand">Backpack Blitz<small>IEEE Day, VIT Pune</small></div>
+  </div>
+  <div class="zones">
+   <div class="zone" data-z="v"><h4>The vault <span>tap or drag loot into your bag</span></h4><div class="grid" id="vault"></div></div>
+   <div class="zone" data-z="b"><h4>Your backpack <span id="cap">0/0 kg</span></h4><div class="meter" id="mt"><i></i></div><div class="grid" id="bag"></div></div>
+  </div>
+  <div class="foot"><button class="btn" id="lock">Lock the bag (Enter)</button></div>
+
+  <div class="ov" id="ready">
+   <h1>Backpack Blitz</h1>
+   <p>Alarms are about to go off. Your bag holds a limited weight, so fill it with the most valuable loot you can. A greedy bot is racing you, and it always grabs the best value per kg first. Can you beat it?</p>
+   <input id="name" maxlength="14" placeholder="Your name (optional)" autocomplete="off">
+   <select id="dept" aria-label="Department"></select>
+   <p class="msg hidden" id="derr">Pick your department to start</p>
+   <div class="seg" id="seg"><button data-m="easy">Easy</button><button data-m="normal">Normal</button><button data-m="hard">Hard</button></div>
+   <label class="tl">Round time <select id="tsel"><option value="auto">Auto (by difficulty)</option><option value="20">20 seconds</option><option value="30">30 seconds</option><option value="45">45 seconds</option><option value="60">60 seconds</option><option value="90">90 seconds</option></select></label>
+   <button class="btn" id="go">Start heist (Enter)</button>
+  </div>
+
+  <div class="ov hidden" id="end">
+   <h1 id="et"></h1>
+   <div class="big" id="es"></div>
+   <p id="ed"></p>
+   <p class="reveal" id="er"></p>
+   <button class="btn" id="nx">Next player</button>
+  </div>
+ </div>
+
+ <div class="side">
+  <div class="panel lb">
+   <h3>Leaderboard</h3>
+   <div class="tabs" id="tabs"><button data-t="dept" class="on">Departments</button><button data-t="player">Players</button></div>
+   <select id="lbf" class="hidden" aria-label="Filter by department"></select>
+   <ol id="lb"></ol>
+   <a class="tiny" href="#admin">Admin</a>
+  </div>
+ </div>
+</div>
+
+<div class="adm hidden" id="admin">
+ <div class="panel adm-in">
+  <div class="adm-top"><h2>Admin: edit or delete entries</h2><a class="btn sm" href="#">Back to game</a></div>
+  <div class="gate" id="gate">
+   <label for="pin">Admin PIN</label>
+   <input id="pin" type="password" autocomplete="off" inputmode="text">
+   <button class="btn sm" id="pinok">Unlock</button>
+   <p class="msg hidden" id="perr">Wrong PIN</p>
+  </div>
+  <div class="hidden" id="apanel">
+   <div class="tools"><input id="asr" placeholder="Search name" aria-label="Search name"><select id="adf" aria-label="Filter by department"></select><span class="am" id="acount"></span></div>
+   <div id="alist"></div>
+  </div>
+ </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ADMIN_PIN='ieee2026'; // change this before deploying
+const DEPTS=[["DESH","DESH (FY)"],["CE","Computer Engineering (CE)"],["CE-SE","Computer Engineering (Software Engineering)"],["IT","Information Technology (IT)"],["CSE-AI","Computer Science & Engineering (Artificial Intelligence)"],["CSE-AIML","Computer Science & Engineering (Artificial Intelligence & Machine Learning)"],["CSE-DS","Computer Science & Engineering (Data Science)"],["CSE-IoT","Computer Science & Engineering (IoT & Cyber Security including Blockchain Technology)"],["AI&DS","Artificial Intelligence & Data Science (AI&DS)"],["E&TC","Electronics & Telecommunication Engineering (E&TC)"],["I&CE","Instrumentation & Control Engineering"],["MECH","Mechanical Engineering"],["CIVIL","Civil Engineering"]];
+const dname=k=>(DEPTS.find(d=>d[0]===k)||[k,k||'Unassigned'])[1];
+const POOL=[["💎","Blue diamond"],["👑","Crown"],["🏺","Ming vase"],["🖼️","Painting"],["📀","Gold disc"],["🗿","Statue"],["⌚","Watch"],["🔱","Trident"],["🧿","Amulet"],["📜","Scroll"],["🪙","Coin stash"],["🎻","Violin"]];
+const LV={easy:{n:5,W:10,mw:7,t:50},normal:{n:6,W:15,mw:10,t:45},hard:{n:8,W:20,mw:12,t:40}};
+const rnd=n=>Math.floor(Math.random()*n);
+let mem={};
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return mem[k]||null;mem[k]=v}}
+let mode=LV[ls('bb-mode')]?ls('bb-mode'):'normal',st='ready',items=[],order=[],W=0,sol=null,botV=0,endAt=0,raf=0,auto=0,meId=0,meDept='',pdept='',lbTab='dept',adminOn=false,adminOK=false,ac;
+let B=[];try{B=JSON.parse(ls('bb-board'))||[]}catch(e){}
+const saveB=()=>{B.sort((a,b)=>b.s-a.s);B=B.slice(0,500);ls('bb-board',JSON.stringify(B))};
+let tsel=ls('bb-time')||'auto';
+const T=()=>tsel==='auto'?LV[mode].t:+tsel;
+
+function beep(f,d=.12,t='sine'){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+
+/* Knapsack DP: dp[i][c] = best value using first i items with capacity c */
+function solve(a,W){
+ const n=a.length,dp=Array.from({length:n+1},()=>Array(W+1).fill(0));
+ for(let i=1;i<=n;i++){const{w,v}=a[i-1];for(let c=0;c<=W;c++){dp[i][c]=dp[i-1][c];if(c>=w&&dp[i-1][c-w]+v>dp[i][c])dp[i][c]=dp[i-1][c-w]+v}}
+ let c=W;const set=[];
+ for(let i=n;i>0;i--)if(dp[i][c]!==dp[i-1][c]){set.push(i-1);c-=a[i-1].w}
+ return{best:dp[n][W],set};
+}
+function greedy(a,W,key){let u=0,s=0;[...a].sort((x,y)=>key(y)-key(x)).forEach(x=>{if(u+x.w<=W){u+=x.w;s+=x.v}});return s}
+function gen(){
+ const L=LV[mode];W=L.W;let a,s,g1,g2;
+ for(let t=0;t<800;t++){
+  const names=[...POOL].sort(()=>Math.random()-.5).slice(0,L.n);
+  a=names.map((p,i)=>{const w=2+rnd(L.mw-1);return{id:i,e:p[0],name:p[1],w,v:w*(3+rnd(6))+rnd(12)+2,bag:false}});
+  const tw=a.reduce((x,y)=>x+y.w,0);if(tw<W*1.4)continue;
+  s=solve(a,W);g1=greedy(a,W,x=>x.v/x.w);g2=greedy(a,W,x=>x.v);
+  if(s.best>g1&&s.best>g2&&s.set.length>=2)break;
+ }
+ items=a;order=[];sol=s;botV=g1;
+}
+const used=()=>items.filter(x=>x.bag).reduce((s,x)=>s+x.w,0);
+const val=()=>items.filter(x=>x.bag).reduce((s,x)=>s+x.v,0);
+const cardH=(x,inVault)=>`<button class="card${inVault&&x.bag?' in':''}" draggable="true" data-id="${x.id}" aria-pressed="${x.bag}"><span class="e">${x.e}</span><b>${x.name}</b><span>⚖ ${x.w} kg</span><span>💰 ${x.v}</span></button>`;
+function render(){
+ $('#vault').innerHTML=items.map(x=>cardH(x,true)).join('');
+ $('#bag').innerHTML=order.length?order.map(i=>cardH(items[i],false)).join(''):(items.length?'<p class="hint">Your bag is empty</p>':'');
+ const u=used();$('#cap').textContent=u+'/'+W+' kg';
+ $('#mt i').style.width=(W?u/W*100:0)+'%';$('#mt').classList.toggle('full',u===W);
+ $('#bagv').textContent=val();$('#wt').textContent=u+'/'+W;$('#botv').textContent=st==='play'?botV:0;
+}
+function move(id,toBag){
+ const x=items[id];if(!x||x.bag===toBag)return;
+ if(toBag&&used()+x.w>W){
+  const c=document.querySelector(`#vault .card[data-id="${id}"]`);if(c){c.classList.add('no');setTimeout(()=>c.classList.remove('no'),400)}
+  beep(110,.2,'sawtooth');return;
+ }
+ x.bag=toBag;order=toBag?[...order,id]:order.filter(i=>i!==id);beep(toBag?620:420,.08);render();
+}
+document.addEventListener('click',e=>{if(st!=='play'||adminOn)return;const c=e.target.closest('.card');if(c){const x=items[+c.dataset.id];move(x.id,!x.bag)}});
+document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){e.dataTransfer.setData('text/plain',c.dataset.id);e.dataTransfer.effectAllowed='move'}});
+document.querySelectorAll('.zone').forEach(z=>{
+ z.addEventListener('dragover',e=>{if(st==='play'){e.preventDefault();z.classList.add('over')}});
+ z.addEventListener('dragleave',()=>z.classList.remove('over'));
+ z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');if(st==='play')move(+e.dataTransfer.getData('text/plain'),z.dataset.z==='b')});
+});
+
+function showT(s){const t=$('#timer');t.textContent=Math.max(0,s).toFixed(1);t.classList.toggle('low',s<10)}
+function start(){
+ if(st!=='ready')return;
+ const d=$('#dept').value;
+ if(!d){$('#dept').classList.add('err');$('#derr').classList.remove('hidden');$('#dept').focus();beep(110,.2,'sawtooth');return}
+ pdept=d;
+ const n=$('#name').value.trim(),c=(+ls('bb-n')||0)+1;ls('bb-n',c);window.pname=n||('Player '+c);
+ gen();st='play';
+ $('#ready').classList.add('hidden');$('#end').classList.add('hidden');
+ render();endAt=performance.now()+T()*1000;beep(660,.15);
+ cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);
+}
+function tick(){
+ if(st!=='play')return;
+ const left=(endAt-performance.now())/1000;
+ if(left<=0){showT(0);lock();return}
+ showT(left);raf=requestAnimationFrame(tick);
+}
+function lock(){
+ if(st!=='play')return;
+ st='end';cancelAnimationFrame(raf);
+ const left=Math.max(0,(endAt-performance.now())/1000),you=val(),opt=sol.best;
+ const perfect=you===opt,beat=you>botV;
+ const score=Math.round(you/opt*700)+(beat?200:0)+(perfect?100+Math.round(left/T()*450):0);
+ meId=Date.now();meDept=pdept;B.push({id:meId,n:window.pname,s:score,m:mode,d:pdept});saveB();
+ lbTab='dept';syncTabs();renderLB();
+ const rank=B.findIndex(x=>x.id===meId)+1,bw=sol.set.reduce((s,i)=>s+items[i].w,0);
+ const ds=standings(),dr=ds.findIndex(x=>x.d===pdept)+1;
+ $('#et').textContent=perfect?'Perfect heist!':beat?'You beat the bot':'The bot out-packed you';
+ $('#es').textContent=score;
+ $('#ed').textContent=`You ${you} · Greedy bot ${botV} · Best possible ${opt}. ${pdept} is #${dr} of ${ds.length} department${ds.length===1?'':'s'}`+(rank<=10?`, and you are #${rank} overall.`:'.');
+ $('#er').textContent=`Best bag: ${sol.set.map(i=>items[i].e).join(' ')} (${bw}/${W} kg). Greedy grabs the best value per kg first and can strand free space. Dynamic programming tries every weight limit: best[c] = max(best[c], best[c − w] + v).`;
+ $('#botv').textContent=botV;beep(perfect?880:beat?660:90,.4,perfect||beat?'sine':'sawtooth');
+ setTimeout(()=>{if(st==='end')$('#end').classList.remove('hidden')},350);
+ let c=12;const nx=$('#nx');nx.textContent=`Next player (${c})`;
+ clearInterval(auto);auto=setInterval(()=>{c--;nx.textContent=`Next player (${c})`;if(c<=0)next()},1000);
+}
+function next(){
+ clearInterval(auto);st='ready';
+ $('#end').classList.add('hidden');$('#ready').classList.remove('hidden');
+ items=[];order=[];render();$('#bagv').textContent='0';$('#botv').textContent='0';$('#wt').textContent='0/0';
+ $('#name').value='';$('#dept').value='';$('#dept').classList.remove('err');$('#derr').classList.add('hidden');
+ showT(T());meId=0;meDept='';renderLB();
+ setTimeout(()=>$('#name').focus(),50);
+}
+
+/* leaderboard: department standings = sum of each department's best 3 scores */
+function standings(){
+ return DEPTS.map(([k])=>{
+  const e=B.filter(x=>x.d===k).sort((a,b)=>b.s-a.s);
+  return{d:k,n:e.length,pts:e.slice(0,3).reduce((s,x)=>s+x.s,0)};
+ }).filter(x=>x.n).sort((a,b)=>b.pts-a.pts);
+}
+function renderLB(){
+ const el=$('#lb');
+ if(lbTab==='dept'){
+  const ds=standings();
+  el.innerHTML=ds.length?ds.map((x,i)=>`<li class="${x.d===meDept?'me':''}" title="${esc(dname(x.d))}"><span>${i+1}. <b>${esc(x.d)}</b><em>${x.n} player${x.n===1?'':'s'}</em></span><b>${x.pts}</b></li>`).join(''):'<li class="empty">No heists yet. Be the first.</li>';
+ }else{
+  const f=$('#lbf').value,p=B.filter(x=>!f||x.d===f).slice(0,15);
+  el.innerHTML=p.length?p.map((x,i)=>`<li class="${x.id===meId?'me':''}" title="${esc(dname(x.d))}"><span>${i+1}. ${esc(x.n)}<em>${esc(x.d||'?')}</em></span><b>${x.s}</b></li>`).join(''):'<li class="empty">No entries yet.</li>';
+ }
+}
+function syncTabs(){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===lbTab));$('#lbf').classList.toggle('hidden',lbTab!=='player')}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){lbTab=b.dataset.t;syncTabs();renderLB()}});
+$('#lbf').onchange=renderLB;
+
+function setMode(m){mode=m;ls('bb-mode',m);document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));if(st==='ready')showT(T())}
+$('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.m)});
+$('#go').onclick=start;$('#nx').onclick=next;$('#lock').onclick=lock;
+$('#dept').onchange=()=>{$('#dept').classList.remove('err');$('#derr').classList.add('hidden')};
+const ts=$('#tsel');ts.value=tsel;if(ts.value!==tsel){tsel='auto';ts.value='auto'}
+ts.onchange=()=>{tsel=ts.value;ls('bb-time',tsel);if(st==='ready')showT(T())};
+
+/* admin */
+const optAll='<option value="">All departments</option>'+DEPTS.map(([k,l])=>`<option value="${esc(k)}">${esc(l)}</option>`).join('');
+$('#dept').innerHTML='<option value="" disabled selected>Select your department…</option>'+DEPTS.map(([k,l])=>`<option value="${esc(k)}">${esc(l)}</option>`).join('');
+$('#lbf').innerHTML=optAll;$('#adf').innerHTML=optAll;
+function renderAdmin(){
+ const f=$('#adf').value,q=$('#asr').value.trim().toLowerCase();
+ const rows=B.filter(x=>(!f||x.d===f)&&(!q||x.n.toLowerCase().includes(q)));
+ $('#acount').textContent=rows.length+' of '+B.length+' entries';
+ $('#alist').innerHTML=rows.length?rows.map(x=>`<div class="arow" data-id="${x.id}"><input class="an" value="${esc(x.n)}" maxlength="14" aria-label="Name"><select class="ad" aria-label="Department"><option value=""${x.d?'':' selected'}>Unassigned</option>${DEPTS.map(([k,l])=>`<option value="${esc(k)}"${k===x.d?' selected':''}>${esc(l)}</option>`).join('')}</select><input class="as" type="number" min="0" max="9999" value="${x.s}" aria-label="Score"><span class="am">${esc(x.m||'')}</span><div class="aa"><button class="btn sm sv">Save</button><button class="btn sm danger del">Delete</button></div></div>`).join(''):'<p class="am">No entries.</p>';
+}
+$('#alist').addEventListener('click',e=>{
+ const r=e.target.closest('.arow');if(!r)return;
+ const x=B.find(y=>String(y.id)===r.dataset.id);if(!x)return;
+ if(e.target.closest('.sv')){
+  x.n=r.querySelector('.an').value.trim().slice(0,14)||'Player';
+  x.d=r.querySelector('.ad').value;
+  x.s=Math.max(0,Math.min(9999,Math.round(+r.querySelector('.as').value)||0));
+  saveB();renderLB();const b=e.target.closest('.sv');b.textContent='Saved ✓';setTimeout(()=>{b.textContent='Save'},1200);
+ }else if(e.target.closest('.del')){
+  const b=e.target.closest('.del');
+  if(b.dataset.arm){B=B.filter(y=>y!==x);saveB();renderLB();renderAdmin()}
+  else{b.dataset.arm='1';b.textContent='Sure?';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent='Delete'}},3000)}
+ }
+});
+$('#asr').oninput=renderAdmin;$('#adf').onchange=renderAdmin;
+function unlock(){
+ if($('#pin').value===ADMIN_PIN){adminOK=true;$('#pin').value='';$('#perr').classList.add('hidden');route()}
+ else{$('#perr').classList.remove('hidden');beep(110,.2,'sawtooth')}
+}
+$('#pinok').onclick=unlock;$('#pin').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+function route(){
+ const a=location.hash==='#admin';
+ if(a&&st==='play'){location.hash='';return}
+ adminOn=a;$('#app').classList.toggle('hidden',a);$('#admin').classList.toggle('hidden',!a);
+ if(a){$('#gate').classList.toggle('hidden',adminOK);$('#apanel').classList.toggle('hidden',!adminOK);if(adminOK)renderAdmin();else setTimeout(()=>$('#pin').focus(),50)}
+ else if(st==='ready')setTimeout(()=>$('#name').focus(),50);
+}
+window.addEventListener('hashchange',route);
+
+document.addEventListener('keydown',e=>{
+ if(adminOn||e.repeat)return;
+ const tg=e.target.tagName;
+ if(e.key==='Enter'&&tg!=='SELECT'){
+  if(st==='ready'){e.preventDefault();start()}
+  else if(st==='play'){e.preventDefault();lock()}
+  else if(st==='end'){e.preventDefault();next()}
+ }else if(e.key===' '&&tg!=='INPUT'&&tg!=='BUTTON'&&tg!=='SELECT'){
+  if(st==='ready'){e.preventDefault();start()}else if(st==='end'){e.preventDefault();next()}
+ }
+});
+setMode(mode);syncTabs();renderLB();showT(T());render();route();
+</script>
+</body></html>
