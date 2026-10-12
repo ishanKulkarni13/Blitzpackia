@@ -237,7 +237,7 @@ export default function Game() {
             event.preventDefault(); move(Number(event.dataTransfer.getData("text/plain")), false);
           }}>
             <h4>The vault <span>tap or drag loot into your bag</span></h4>
-            <div className="grid">{items.filter((item) => !item.inBag).map((item) => <LootCard key={item.id} item={item} onMove={move} />)}</div>
+            <div className="grid">{items.map((item) => <LootCard key={item.id} item={item} inVault onMove={move} />)}</div>
           </section>
           <section className="zone" onDragOver={(event) => event.preventDefault()} onDrop={(event) => {
             event.preventDefault(); move(Number(event.dataTransfer.getData("text/plain")), true);
@@ -276,8 +276,8 @@ export default function Game() {
   );
 }
 
-function LootCard({ item, onMove }: { item: Item; onMove: (id: number, toBag: boolean) => void }) {
-  return <button className="card" draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", String(item.id))} onClick={() => onMove(item.id, !item.inBag)} aria-pressed={item.inBag}>
+function LootCard({ item, inVault = false, onMove }: { item: Item; inVault?: boolean; onMove: (id: number, toBag: boolean) => void }) {
+  return <button className={`card${inVault && item.inBag ? " in" : ""}`} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", String(item.id))} onClick={() => onMove(item.id, !item.inBag)} aria-pressed={item.inBag}>
     <span className="e">{item.emoji}</span><b>{item.name}</b><span>⚖ {item.weight} kg</span><span>💰 {item.value}</span>
   </button>;
 }
